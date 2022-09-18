@@ -1,20 +1,20 @@
 import {NgModule} from '@angular/core';
-import {MissionsComponent} from './container/missions/missions.component';
-import {MissionsRoutingModule} from "./missions-routing.module";
-import {MissionsContainerComponent} from './container/missions-container/missions-container.component';
-import {ConnectedModule} from "../connected.module";
-import {TagModule} from "primeng/tag";
+import {AboutComponent} from './container/about/about.component';
+import {AboutRoutingModule} from "./about-routing.module";
+import {AboutContainerComponent} from './container/about-container/about-container.component';
+import {ButtonModule} from "primeng/button";
+import {RippleModule} from "primeng/ripple";
 
 @NgModule({
   declarations: [
-    MissionsComponent,
-    MissionsContainerComponent,
+    AboutComponent,
+    AboutContainerComponent,
   ],
   imports: [
-    MissionsRoutingModule,
-    ConnectedModule,
-    TagModule,
+    AboutRoutingModule,
+    ButtonModule,
+    RippleModule,
   ]
 })
-export class MissionsModule {
+export class AboutModule {
 }
