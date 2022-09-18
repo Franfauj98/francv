@@ -1,0 +1,14 @@
+i {
+  font-size: 1.8rem;
+  margin-left: 15px;
+  margin-right: 15px;
+
+  &.pi-linkedin {
+    color: var(--blue-800);
+  }
+
+  &.pi-inbox {
+    color: var(--red-700);
+    margin-right: 30px;
+  }
+}
