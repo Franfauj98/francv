@@ -9,8 +9,10 @@ import {Coordinates} from "../../data-model/coordinates";
 export class AboutContainerComponent implements OnInit {
   public largeurCanvas = 890;
   public hauteurCanvas = 600;
+  public ballRadius = 20;
   public gridBlocks: Coordinates[] = [];
   public dashCoordinates = new Coordinates(350, 550, 200, 20);
+  public ballCoorrdinates = new Coordinates(0, 500, 0, 0);
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -18,17 +20,19 @@ export class AboutContainerComponent implements OnInit {
       let ctx = this.getCanvasCtx();
       this.drawGameGrid(ctx);
       this.drawDash(ctx);
-      let ballPos = 20;
+      let ballPos = this.ballRadius;
+      let vitesseDeplacement = 5;
       setInterval(() => {
         if (ctx) {
-          ctx.clearRect(ballPos - 25, 500 - 20, 40, 40);
+          ctx.clearRect(ballPos - 25, 500 - this.ballRadius, 60, 40);
           this.drawGameGrid(ctx);
-          ctx.beginPath();
-          ctx.fillStyle = "blue";
-          ctx.arc(ballPos, 500, 20, 0, 2 * Math.PI);
-          ctx.fill();
-          ctx.closePath();
-          ballPos = ballPos + 5;
+          this.collisionDetection(new Coordinates(ballPos + 40, 500, 0, 0));
+          this.ballCoorrdinates.x = ballPos;
+          this.drawBall(ctx);
+          if (this.collisionDetection(new Coordinates(ballPos, 500, 0, 0))) {
+            vitesseDeplacement = -vitesseDeplacement;
+          }
+          ballPos = ballPos + vitesseDeplacement;
         }
       }, 10);
     }, 100);
@@ -56,8 +60,9 @@ export class AboutContainerComponent implements OnInit {
     }
   }
 
-  collisionDetection() {
-
+  collisionDetection(ballCoordinates: Coordinates): boolean {
+    return ballCoordinates.x < this.ballRadius || ballCoordinates.x > this.largeurCanvas - this.ballRadius ||
+      ballCoordinates.y < this.ballRadius || ballCoordinates.y > this.hauteurCanvas - this.ballRadius;
   }
 
   getCanvasCtx(): CanvasRenderingContext2D {
@@ -68,6 +73,14 @@ export class AboutContainerComponent implements OnInit {
   drawDash = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = "black";
     ctx.fillRect(this.dashCoordinates.x, this.dashCoordinates.y, this.dashCoordinates.w, this.dashCoordinates.h);
+  }
+
+  drawBall = (ctx: CanvasRenderingContext2D) => {
+    ctx.beginPath();
+    ctx.fillStyle = "blue";
+    ctx.arc(this.ballCoorrdinates.x, this.ballCoorrdinates.y, this.ballRadius, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.closePath();
   }
 
   drawGameGrid = (ctx: CanvasRenderingContext2D) => {
@@ -90,11 +103,11 @@ export class AboutContainerComponent implements OnInit {
     ctx.clearRect(this.dashCoordinates.x, this.dashCoordinates.y, this.dashCoordinates.w, this.dashCoordinates.h);
     if (right) {
       if (this.dashCoordinates.x + this.dashCoordinates.w < this.largeurCanvas) {
-        this.dashCoordinates.x = this.dashCoordinates.x + 10;
+        this.dashCoordinates.x = this.dashCoordinates.x + 20;
       }
     } else {
       if (this.dashCoordinates.x > 0) {
-        this.dashCoordinates.x = this.dashCoordinates.x - 10;
+        this.dashCoordinates.x = this.dashCoordinates.x - 20;
       }
     }
     this.drawDash(ctx);
